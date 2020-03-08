@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/primety"
+    android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+
+    android:scaleType="fitCenter"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/Online"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:text="Онлайн"
+        tools:layout_editor_absoluteX="159dp"
+        tools:layout_editor_absoluteY="212dp"
+        android:onClick="Online"
+        android:layout_centerInParent="true"
+        />
+
+    <Button
+        android:id="@+id/Write"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:text="Записи"
+        tools:layout_editor_absoluteX="159dp"
+        tools:layout_editor_absoluteY="301dp"
+        android:onClick="List"
+        android:layout_centerInParent="true"
+        />
+
+    <Button
+        android:id="@+id/Exit"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:onClick="Exit"
+        android:text="Выход"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="441dp"
+        android:layout_centerInParent="true"
+        />
+    </LinearLayout>>
+
+</RelativeLayout>
