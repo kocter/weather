@@ -1,6 +1,7 @@
 package com.example.weather;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class add_in_list extends Activity {
+public class add_in_list extends AppCompatActivity {
 
     EditText nameBox;
     EditText yearBox;

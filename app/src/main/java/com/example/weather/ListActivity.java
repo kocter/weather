@@ -1,15 +1,17 @@
 package com.example.weather;
-import android.app.Activity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.view.View;
-import android.content.Intent;
 
-public class ListActivity extends Activity {
+public class ListActivity extends AppCompatActivity {
 
     ListView userList;
     TextView header;
