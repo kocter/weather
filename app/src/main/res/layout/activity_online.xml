@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/Gps"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_centerInParent="true"
+        android:onClick="Gps"
+        android:text="Координаты хочу я" />
+    <Button
+        android:id="@+id/Weather"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_centerInParent="true"
+        android:onClick="Weather"
+        android:text="Погоду в Перми хочу я" />
 
 </LinearLayout>

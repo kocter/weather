@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 public class GpsActivity extends AppCompatActivity {
 
     private static  final int REQUEST_LOCATION=1;
@@ -32,7 +34,7 @@ public class GpsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_gps);
 
         //Add permission
 
@@ -62,6 +64,7 @@ public class GpsActivity extends AppCompatActivity {
 
                     getLocation();
                 }
+
             }
         });
 
@@ -121,7 +124,7 @@ public class GpsActivity extends AppCompatActivity {
                 showLocationTxt.setText("Your Location:"+"\n"+"Latitude= "+latitude+"\n"+"Longitude= "+longitude);
 
 
-                getWeather();
+
             }
 
 
@@ -139,9 +142,6 @@ public class GpsActivity extends AppCompatActivity {
 
 
 
-    private  void getWeather(){
-
-    }
 
     private void OnGPS() {
 
