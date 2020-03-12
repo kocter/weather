@@ -39,6 +39,18 @@ public class MainActivity extends AppCompatActivity {
         System.exit(0);
     }
 
+    public void GPS(View view) {
+        // myTextView.setText("Все ок)");
+        Intent GPS = new Intent(this, GpsActivity.class);
+        startActivity(GPS);
+    }
+
+    public void Weather(View view) {
+        // myTextView.setText("Все ок)");
+        Intent Weather = new Intent(this, WeatherActivity.class);
+        startActivity(Weather);
+    }
+
 
 
 }
