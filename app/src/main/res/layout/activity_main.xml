@@ -39,27 +39,9 @@
         android:layout_centerInParent="true"
         />
 
-    <Button
-        android:id="@+id/Exit"
-        android:layout_width="300dp"
-        android:layout_height="75dp"
-        android:onClick="Exit"
-        android:text="Выход"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="441dp"
-        android:layout_centerInParent="true"
-        />
 
-        <Button
-            android:id="@+id/Gps"
-            android:layout_width="300dp"
-            android:layout_height="75dp"
-            android:text="GPS"
-            tools:layout_editor_absoluteX="159dp"
-            tools:layout_editor_absoluteY="301dp"
-            android:onClick="GPS"
-            android:layout_centerInParent="true"
-            />
+
+
 
         <Button
             android:id="@+id/Weather"
@@ -69,6 +51,17 @@
             tools:layout_editor_absoluteX="159dp"
             tools:layout_editor_absoluteY="301dp"
             android:onClick="Weather"
+            android:layout_centerInParent="true"
+            />
+
+        <Button
+            android:id="@+id/Exit"
+            android:layout_width="300dp"
+            android:layout_height="75dp"
+            android:onClick="Exit"
+            android:text="Выход"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="441dp"
             android:layout_centerInParent="true"
             />
 

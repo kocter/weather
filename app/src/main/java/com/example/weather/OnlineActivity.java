@@ -21,13 +21,6 @@ public class OnlineActivity extends AppCompatActivity {
 
     }
 
-
-    public void Gps(View view) {
-        // myTextView.setText("Все ок)");
-        Intent Gps = new Intent(this, GpsActivity.class);
-        startActivity(Gps);
-    }
-
     public void Weather(View view) {
         // myTextView.setText("Все ок)");
         Intent Weather = new Intent(this, WeatherActivity.class);

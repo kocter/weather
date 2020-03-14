@@ -1,9 +1,20 @@
 package com.example.weather;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -32,7 +43,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Define the OpenWeatherMap API URL
      */
-    private static final String API_URL = "https://api.openweathermap.org/data/2.5/weather?lat=58.013144&lon=56.234039&appid=d7db4e9fe6ae9bb5075240153a655c12";
+    private static final String API_URL = "https://api.openweathermap.org/data/2.5/weather?";
+    private static final String API_ID="&appid=d7db4e9fe6ae9bb5075240153a655c12";
+    private static  final int REQUEST_LOCATION=1;
+
+
+
+
+    LocationManager locationManager;
+    String latitude,longitude;
+
 
     /**
      * Instance variables to represent the "London Current Weather Synchronously"
@@ -44,6 +64,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             description_weatherTextView,gpsTextView;
     private ProgressBar loadingProgressBar;
     private LinearLayout getLondonCurrentWeatherLinearLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,53 +122,78 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
          * and also an instance of Request class. Since Request class is the main class of OkHttp Library which executes
          * all the requests.
          */
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .build();
-        /**
-         * After this, call enqueue() method to make an asynchronous API request, and implement inside it
-         * CallBack Interface Listener "Observer" since this Callback Interface has to methods onResponse()
-         * that is fire once a successive response is returned from OpenWeatherMap API and onFailure()
-         * that is fire once an error occurs
-         */
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingProgressBar.setVisibility(View.GONE);
-                        Toast.makeText(WeatherActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String responseString = response.body().string();
-                    /**
-                     * Parse JSON response to Gson library
-                     */
-                    JSONObject jsonObject = new JSONObject(responseString);
-                    Gson gson = new Gson();
-                    final WeatherDataBean weatherDataBean = gson.fromJson(jsonObject.toString(), WeatherDataBean.class);
-                    /**
-                     * Any action involving the user interface must be done in the main or UI thread, using runOnUiThread()
-                     * method will run this specified action on the UI thread.
-                     */
+
+
+        String Coordinates;
+
+
+        locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //Check gps is enable or not
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            //Write Function To enable gps
+
+            OnGPS();
+        }
+
+
+        else {
+
+
+            Coordinates = getLocation();
+            String API_FULL_URL = API_URL + Coordinates + API_ID;
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(API_FULL_URL)
+                    .build();
+            /**
+             * After this, call enqueue() method to make an asynchronous API request, and implement inside it
+             * CallBack Interface Listener "Observer" since this Callback Interface has to methods onResponse()
+             * that is fire once a successive response is returned from OpenWeatherMap API and onFailure()
+             * that is fire once an error occurs
+             */
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, final IOException e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateUI(weatherDataBean);
+                            loadingProgressBar.setVisibility(View.GONE);
+                            Toast.makeText(WeatherActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String responseString = response.body().string();
+                        /**
+                         * Parse JSON response to Gson library
+                         */
+                        JSONObject jsonObject = new JSONObject(responseString);
+                        Gson gson = new Gson();
+                        final WeatherDataBean weatherDataBean = gson.fromJson(jsonObject.toString(), WeatherDataBean.class);
+                        /**
+                         * Any action involving the user interface must be done in the main or UI thread, using runOnUiThread()
+                         * method will run this specified action on the UI thread.
+                         */
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateUI(weatherDataBean);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
 
@@ -172,6 +218,100 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 //            description_weatherTextView.setText("Description weather : " + weatherDataBean.weather);
         }
+    }
+
+    public void OnGPS() {
+
+        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
+
+        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+    }
+
+
+
+    public String getLocation() {
+        String str=null;
+        locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //Check gps is enable or not
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            //Write Function To enable gps
+
+            OnGPS();
+        }
+
+        else
+        {
+            //Check Permissions again
+
+            if (ActivityCompat.checkSelfPermission(WeatherActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(WeatherActivity.this,
+
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]
+                        {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            } else {
+                Location LocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location LocationNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location LocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                if (LocationGps != null) {
+                    double lat = LocationGps.getLatitude();
+                    double longi = LocationGps.getLongitude();
+                    String lat1 = String.format("%.6f", lat);
+                    String longi1 = String.format("%.6f", longi);
+
+                    latitude = String.valueOf(lat1);
+                    longitude = String.valueOf(longi1);
+
+                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+
+
+                } else if (LocationNetwork != null) {
+                    double lat = LocationNetwork.getLatitude();
+                    double longi = LocationNetwork.getLongitude();
+                    String lat1 = String.format("%.6f", lat);
+                    String longi1 = String.format("%.6f", longi);
+
+                    latitude = String.valueOf(lat1);
+                    longitude = String.valueOf(longi1);
+                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+
+                } else if (LocationPassive != null) {
+                    double lat = LocationPassive.getLatitude();
+                    double longi = LocationPassive.getLongitude();
+                    String lat1 = String.format("%.6f", lat);
+                    String longi1 = String.format("%.6f", longi);
+                    latitude = String.valueOf(lat1);
+                    longitude = String.valueOf(longi1);
+                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+
+
+
+                } else {
+                    Toast.makeText(this, "Can't Get Your Location", Toast.LENGTH_SHORT).show();
+                }
+
+                //Thats All Run Your App
+            }
+        }
+
+        return str;
+
     }
 
 
