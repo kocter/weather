@@ -20,4 +20,4 @@
         android:onClick="Weather"
         android:text="Погоду в Перми хочу я" />
 
-</LinearLayout>
+    </LinearLayout>

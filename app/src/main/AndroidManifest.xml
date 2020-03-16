@@ -18,6 +18,7 @@
         <activity android:name=".WeatherActivity"></activity>
         <activity android:name=".add_in_list" />
         <activity android:name=".ListActivity" />
+        <activity android:name=".NewActivity" />
         <activity android:name=".OnlineActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
