@@ -30,6 +30,10 @@ public class WeatherActivity extends AppCompatActivity {
 
     private static  final int REQUEST_LOCATION=1;
     TextView WeatherInformation1,WeatherInformation2; //Здесь нужно придумать как выводить много элементов, пока для примера сделал 2
+
+
+
+
     LocationManager locationManager;
     String latitude,longitude;
     String[] Coords = new String[2];
@@ -40,7 +44,7 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         WeatherInformation1 = (TextView) findViewById(R.id.WeatherInformation1);
-        WeatherInformation2 = (TextView) findViewById(R.id.WeatherInformation2);
+       // WeatherInformation2 = (TextView) findViewById(R.id.WeatherInformation2);
         //Instantiate Class With Your ApiKey As The Parameter
         OpenWeatherMapHelper helper = new OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY));
 
@@ -78,27 +82,53 @@ public class WeatherActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(ThreeHourForecast threeHourForecast) {
 
+
                     String City = threeHourForecast.getCity().getName() + "/" + threeHourForecast.getCity().getCountry();
-                    String Time1 = threeHourForecast.getList().get(0).getDtTxt(); // Дата и Время
-                    String Time2 = threeHourForecast.getList().get(1).getDtTxt(); // Дата и Время
-                    Double Temperature1 = threeHourForecast.getList().get(0).getMain().getTemp(); // Температура
-                    Double Temperature2 = threeHourForecast.getList().get(1).getMain().getTemp();// Температура
-                    Double Wind1 = threeHourForecast.getList().get(0).getWind().getSpeed(); //Скорость ветра
-                    Double Wind2= threeHourForecast.getList().get(1).getWind().getSpeed(); //Скорость ветра
-                    String Weather1 = threeHourForecast.getList().get(0).getWeatherArray().get(0).getDescription();  // Описание погоды
-                    String Weather2 = threeHourForecast.getList().get(1).getWeatherArray().get(0).getDescription(); // Описание погоды
-                    Double WindDirection1 =threeHourForecast.getList().get(0).getWind().getDeg(); //Направление ветра
-                    Double WindDirection2 =threeHourForecast.getList().get(1).getWind().getDeg(); //Направление ветра
-                    long Pressure1 = Math.round(threeHourForecast.getList().get(0).getMain().getPressure()/1.33322); //Давление
-                    long Pressure2 = Math.round(threeHourForecast.getList().get(1).getMain().getPressure()/1.33322);//Давление
+
+                    String[] Time = new String[40];
+                    Double[] Temperature = new Double[40];
+                    Double[] Wind = new Double[40];
+                    Double[] WindDirection = new Double[40]; // Здесь создаются все элементы массива
+                    String[] Weather = new String[40];
+                    long[] Pressure = new long[40];
+
+
+                    String[] View = new String[40]; // Здесь вся информация о погоде по всем элементам массива
+                    String Str = "";
+
+                    for(int i=0;i<40;i++){
+                        Time[i]=threeHourForecast.getList().get(i).getDtTxt();
+                        Temperature[i] = threeHourForecast.getList().get(i).getMain().getTemp();
+                        Wind[i] = threeHourForecast.getList().get(i).getWind().getSpeed();
+                        Weather[i] = threeHourForecast.getList().get(i).getWeatherArray().get(0).getDescription();
+                        WindDirection[i] =threeHourForecast.getList().get(i).getWind().getDeg(); //Направление ветра
+                        Pressure[i] = Math.round(threeHourForecast.getList().get(i).getMain().getPressure()/1.33322); //Давление
+                        View[i] = "Город: " + City + "\n" + "Дата и Время: " + Time[i] + "\n" +"На улице: " + Weather[i] + "\n" + "Температура: " + Temperature[i] + "\n" + "Скорость ветра: " + Wind[i] + "\n" +"Направление ветра: " + WindDirection[i]+ "\n"+"Атмосферное давление: " + Pressure[i];
+
+                        Str =Str +  View[i] +"\n"+"\n";
+                    }
+
+
+//                    String Time1 = threeHourForecast.getList().get(0).getDtTxt(); // Дата и Время
+//                    String Time2 = threeHourForecast.getList().get(1).getDtTxt(); // Дата и Время
+//                    Double Temperature1 = threeHourForecast.getList().get(0).getMain().getTemp(); // Температура
+//                    Double Temperature2 = threeHourForecast.getList().get(1).getMain().getTemp();// Температура
+//                    Double Wind1 = threeHourForecast.getList().get(0).getWind().getSpeed(); //Скорость ветра
+//                    Double Wind2= threeHourForecast.getList().get(1).getWind().getSpeed(); //Скорость ветра
+//                    String Weather1 = threeHourForecast.getList().get(0).getWeatherArray().get(0).getDescription();  // Описание погоды
+//                    String Weather2 = threeHourForecast.getList().get(1).getWeatherArray().get(0).getDescription(); // Описание погоды
+//                    Double WindDirection1 =threeHourForecast.getList().get(0).getWind().getDeg(); //Направление ветра
+//                    Double WindDirection2 =threeHourForecast.getList().get(1).getWind().getDeg(); //Направление ветра
+//                    long Pressure1 = Math.round(threeHourForecast.getList().get(0).getMain().getPressure()/1.33322); //Давление
+//                    long Pressure2 = Math.round(threeHourForecast.getList().get(1).getMain().getPressure()/1.33322);//Давление
 
 
 
 
 // Производим вывод погоды
-                    WeatherInformation1.setText("Город: " + City + "\n" + "Дата и Время: " + Time1 + "\n" +"На улице: " + Weather1 + "\n" + "Температура: " + Temperature1 + "\n" + "Скорость ветра: " + Wind1 + "\n" +"Направление ветра: " + WindDirection1+ "\n"+"Атмосферное давление: " + Pressure1);
-                    WeatherInformation2.setText("Город: " + City + "\n" + "Дата и Время: " + Time2 + "\n" + "На улице: " + Weather2 + "\n" + "Температура: " + Temperature2 + "\n" + "Скорость ветра: " + Wind2 + "\n"+"Направление ветра: " + WindDirection2+ "\n"+"Атмосферное давление: " + Pressure2);
-
+                //    WeatherInformation1.setText("Город: " + City + "\n" + "Дата и Время: " + Time1 + "\n" +"На улице: " + Weather1 + "\n" + "Температура: " + Temperature1 + "\n" + "Скорость ветра: " + Wind1 + "\n" +"Направление ветра: " + WindDirection1+ "\n"+"Атмосферное давление: " + Pressure1);
+               //     WeatherInformation2.setText("Город: " + City + "\n" + "Дата и Время: " + Time2 + "\n" + "На улице: " + Weather2 + "\n" + "Температура: " + Temperature2 + "\n" + "Скорость ветра: " + Wind2 + "\n"+"Направление ветра: " + WindDirection2+ "\n"+"Атмосферное давление: " + Pressure2);
+                    WeatherInformation1.setText(Str); // Вывод в TextView сего массива, на данный момент нету скролла
 
                 }
 
