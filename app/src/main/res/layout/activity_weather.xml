@@ -4,7 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
     <TextView
         android:id="@+id/WeatherInformation1"
         android:layout_width="wrap_content"
@@ -13,14 +18,7 @@
         android:layout_marginTop="5dp"
         android:text="@string/app_name"
         android:textAppearance="?android:textAppearanceMedium" />
+    </ScrollView>
 
-    <TextView
-        android:id="@+id/WeatherInformation2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/app_name"
-        android:textAppearance="?android:textAppearanceMedium" />
 
 </LinearLayout>
