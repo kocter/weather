@@ -53,16 +53,7 @@
             android:onClick="Weather"
             android:layout_centerInParent="true"
             />
-        <Button
-            android:id="@+id/NewButton"
-            android:layout_width="300dp"
-            android:layout_height="75dp"
-            android:text="NewButton"
-            tools:layout_editor_absoluteX="159dp"
-            tools:layout_editor_absoluteY="301dp"
-            android:onClick="NewButton"
-            android:layout_centerInParent="true"
-            />
+
 
         <Button
             android:id="@+id/Exit"

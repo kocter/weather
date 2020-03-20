@@ -15,14 +15,12 @@ public class MainActivity extends AppCompatActivity {
     Button Online;
     Button Write;
     Button Exit;
-    Button NewButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Online =  findViewById(R.id.Online);
         Write =  findViewById(R.id.Write);
-        NewButton =  findViewById(R.id.NewButton);
         Exit =  findViewById(R.id.Exit);
     }
     public void Online(View view) {
@@ -47,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(Weather);
     }
 
-    public void NewButton(View view) {
-        // myTextView.setText("Все ок)");
-        Intent NewButton = new Intent(this, NewActivity.class);
-        startActivity(NewButton);
-    }
 
     public void Exit(View view) {
         System.exit(0);

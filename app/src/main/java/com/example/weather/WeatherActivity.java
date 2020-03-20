@@ -1,5 +1,7 @@
 package com.example.weather;
 
+
+
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,218 +9,114 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
+
+import android.provider.Settings;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.provider.Settings;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-public class WeatherActivity extends AppCompatActivity implements View.OnClickListener {
+import com.kwabenaberko.openweathermaplib.constants.Lang;
+import com.kwabenaberko.openweathermaplib.constants.Units;
+import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
+import com.kwabenaberko.openweathermaplib.implementation.callbacks.ThreeHourForecastCallback;
+import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
 
 
-    //GPS gps= new GPS();
+public class WeatherActivity extends AppCompatActivity {
 
-    /**
-     * Define the OpenWeatherMap API URL
-     */
-    private static final String API_URL = "https://api.openweathermap.org/data/2.5/weather?";
-    private static final String API_ID="&appid=d7db4e9fe6ae9bb5075240153a655c12";
     private static  final int REQUEST_LOCATION=1;
-
-
-
-
+    TextView WeatherInformation1,WeatherInformation2; //Здесь нужно придумать как выводить много элементов, пока для примера сделал 2
     LocationManager locationManager;
     String latitude,longitude;
-
-
-    /**
-     * Instance variables to represent the "London Current Weather Synchronously"
-     * and "London Current Weather Asynchronously" buttons,
-     * "Temperature", "Pressure" and "Humidity" TextViews and loadingProgressbar.
-     */
-    private Button getCurrentWeatherAsync;
-    private TextView temperatureTextView, pressureTextView, humidityTextView, nameTextView,feels_likeTextView,wind_speedTextView,wind_directionTextView,
-            description_weatherTextView,gpsTextView;
-    private ProgressBar loadingProgressBar;
-    private LinearLayout getLondonCurrentWeatherLinearLayout;
+    String[] Coords = new String[2];
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        WeatherInformation1 = (TextView) findViewById(R.id.WeatherInformation1);
+        WeatherInformation2 = (TextView) findViewById(R.id.WeatherInformation2);
+        //Instantiate Class With Your ApiKey As The Parameter
+        OpenWeatherMapHelper helper = new OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY));
 
-        /**
-         * Instantiate the variables we declared above using the ID values
-         * we specified in the layout XML file.
-         */
+        //Set Units
+        helper.setUnits(Units.METRIC);
 
-        getCurrentWeatherAsync = (Button) findViewById(R.id.get_weather_async_btn);
-        getLondonCurrentWeatherLinearLayout = (LinearLayout) findViewById(R.id.root_ll);
-        temperatureTextView = (TextView) findViewById(R.id.temperature_tv);
-        feels_likeTextView = (TextView) findViewById(R.id.feels_like_tv);
-        pressureTextView = (TextView) findViewById(R.id.pressure_tv);
-        humidityTextView = (TextView) findViewById(R.id.humidity_tv);
-        nameTextView = (TextView) findViewById(R.id.name_tv);
-        wind_speedTextView = (TextView) findViewById(R.id.wind_speed_tv);
-        wind_directionTextView = (TextView) findViewById(R.id.wind_direction_tv);
-//        description_weatherTextView = (TextView) findViewById(R.id.activity_weather_description_weather_tv);
-        gpsTextView = (TextView) findViewById(R.id.activity_GPS_tv);
-        loadingProgressBar = (ProgressBar) findViewById(R.id.pb);
-
-        /**
-         * Add a listener to getCurrentWeatherAsync so that we can handle presses.
-         */
-
-        getCurrentWeatherAsync.setOnClickListener(this);
-
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        /**
-         * make an asynchronous background request.
-         */
-
-        getWeatherAsync();
-
-    }
+        //Set lang
+        helper.setLang(Lang.RUSSIAN);
 
 
-    /**
-     * getWeatherAsync() method will make an asynchronous background request
-     * by using OkHttpClient class, Request main class and Callback interface.
-     */
-    private void getWeatherAsync() {
-        getLondonCurrentWeatherLinearLayout.setVisibility(View.INVISIBLE);
-        loadingProgressBar.setVisibility(View.VISIBLE);
+        /*
+        This Example Only Shows how to get current weather by city name
+        Check the docs for more methods [https://github.com/KwabenBerko/OpenWeatherMap-Android-Library/]
+        */
 
-        /**
-         * To make REST API call through Android OkHttp Library we may first need to build an instance of OkHttpClient class
-         * and also an instance of Request class. Since Request class is the main class of OkHttp Library which executes
-         * all the requests.
-         */
-
-
-
-        String Coordinates;
-
-
-        locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //Check gps is enable or not
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-        {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             //Write Function To enable gps
 
             OnGPS();
-        }
+        } else {
+//Подставить переменные на места получения координат
+            Coords = getLocation();
 
 
-        else {
+            double latitude = Double.valueOf(Coords[0]);
+            double longitude = Double.valueOf(Coords[1]);
 
 
-            Coordinates = getLocation();
-            String API_FULL_URL = API_URL + Coordinates + API_ID;
-
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(API_FULL_URL)
-                    .build();
-            /**
-             * After this, call enqueue() method to make an asynchronous API request, and implement inside it
-             * CallBack Interface Listener "Observer" since this Callback Interface has to methods onResponse()
-             * that is fire once a successive response is returned from OpenWeatherMap API and onFailure()
-             * that is fire once an error occurs
-             */
-            client.newCall(request).enqueue(new Callback() {
+///// Здесь получаем массив погоды и выводим из него данные в перменные
+            helper.getThreeHourForecastByGeoCoordinates(latitude,longitude, new ThreeHourForecastCallback() {
                 @Override
-                public void onFailure(Call call, final IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loadingProgressBar.setVisibility(View.GONE);
-                            Toast.makeText(WeatherActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                public void onSuccess(ThreeHourForecast threeHourForecast) {
+
+                    String City = threeHourForecast.getCity().getName() + "/" + threeHourForecast.getCity().getCountry();
+                    String Time1 = threeHourForecast.getList().get(0).getDtTxt(); // Дата и Время
+                    String Time2 = threeHourForecast.getList().get(1).getDtTxt(); // Дата и Время
+                    Double Temperature1 = threeHourForecast.getList().get(0).getMain().getTemp(); // Температура
+                    Double Temperature2 = threeHourForecast.getList().get(1).getMain().getTemp();// Температура
+                    Double Wind1 = threeHourForecast.getList().get(0).getWind().getSpeed(); //Скорость ветра
+                    Double Wind2= threeHourForecast.getList().get(1).getWind().getSpeed(); //Скорость ветра
+                    String Weather1 = threeHourForecast.getList().get(0).getWeatherArray().get(0).getDescription();  // Описание погоды
+                    String Weather2 = threeHourForecast.getList().get(1).getWeatherArray().get(0).getDescription(); // Описание погоды
+                    Double WindDirection1 =threeHourForecast.getList().get(0).getWind().getDeg(); //Направление ветра
+                    Double WindDirection2 =threeHourForecast.getList().get(1).getWind().getDeg(); //Направление ветра
+                    long Pressure1 = Math.round(threeHourForecast.getList().get(0).getMain().getPressure()/1.33322); //Давление
+                    long Pressure2 = Math.round(threeHourForecast.getList().get(1).getMain().getPressure()/1.33322);//Давление
+
+
+
+
+// Производим вывод погоды
+                    WeatherInformation1.setText("Город: " + City + "\n" + "Дата и Время: " + Time1 + "\n" +"На улице: " + Weather1 + "\n" + "Температура: " + Temperature1 + "\n" + "Скорость ветра: " + Wind1 + "\n" +"Направление ветра: " + WindDirection1+ "\n"+"Атмосферное давление: " + Pressure1);
+                    WeatherInformation2.setText("Город: " + City + "\n" + "Дата и Время: " + Time2 + "\n" + "На улице: " + Weather2 + "\n" + "Температура: " + Temperature2 + "\n" + "Скорость ветра: " + Wind2 + "\n"+"Направление ветра: " + WindDirection2+ "\n"+"Атмосферное давление: " + Pressure2);
+
+
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        String responseString = response.body().string();
-                        /**
-                         * Parse JSON response to Gson library
-                         */
-                        JSONObject jsonObject = new JSONObject(responseString);
-                        Gson gson = new Gson();
-                        final WeatherDataBean weatherDataBean = gson.fromJson(jsonObject.toString(), WeatherDataBean.class);
-                        /**
-                         * Any action involving the user interface must be done in the main or UI thread, using runOnUiThread()
-                         * method will run this specified action on the UI thread.
-                         */
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateUI(weatherDataBean);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                public void onFailure(Throwable throwable) {
+                    WeatherInformation1.setText("Пустовато здесь");
+                    WeatherInformation2.setText("Пустовато и здесь");
                 }
+
+
             });
+
         }
+
     }
 
 
 
-    /**
-     * updateUI() method will be used once a successive response is returned from OpenWeatherMap API
-     *
-     * @param weatherDataBean that is returned from successive OpenWeatherMap API request
-     */
-    private void updateUI(WeatherDataBean weatherDataBean) {
-        loadingProgressBar.setVisibility(View.GONE);
-        if (weatherDataBean != null) {
-            getLondonCurrentWeatherLinearLayout.setVisibility(View.VISIBLE);
-//            gpsTextView.setText("Координаты : " + gps);
-            nameTextView.setText("You are in : " + weatherDataBean.name);
-            temperatureTextView.setText("Temperature : " + weatherDataBean.getMain().getTemp() + " Celsius");
-            feels_likeTextView.setText("Feels like : " + weatherDataBean.getMain().getFeels_like());
-            pressureTextView.setText("Pressure : " + weatherDataBean.getMain().getPressure());
-            humidityTextView.setText("Humidity : " + weatherDataBean.getMain().getHumidity());
-            wind_speedTextView.setText("Wind speed : " + weatherDataBean.getWind().getSpeed());
-            wind_directionTextView.setText("Wind direction : " + weatherDataBean.getWind().getDeg());
-
-//            description_weatherTextView.setText("Description weather : " + weatherDataBean.weather);
-        }
-    }
 
     public void OnGPS() {
 
@@ -242,8 +140,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
-    public String getLocation() {
-        String str=null;
+    public String[] getLocation() {
+
+
+
         locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //Check gps is enable or not
@@ -264,7 +164,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            } else {
+            }
+            else {
                 Location LocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 Location LocationNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 Location LocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
@@ -275,11 +176,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     String lat1 = String.format("%.6f", lat);
                     String longi1 = String.format("%.6f", longi);
 
-                    latitude = String.valueOf(lat1);
-                    longitude = String.valueOf(longi1);
+                    latitude = String.valueOf(lat1).replace(',', '.');
+                    longitude = String.valueOf(longi1).replace(',', '.');
 
-                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
-
+                    // WeatherInformation1=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+                    Coords[0]=latitude;
+                    Coords[1]=longitude;
 
                 } else if (LocationNetwork != null) {
                     double lat = LocationNetwork.getLatitude();
@@ -287,18 +189,26 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     String lat1 = String.format("%.6f", lat);
                     String longi1 = String.format("%.6f", longi);
 
-                    latitude = String.valueOf(lat1);
-                    longitude = String.valueOf(longi1);
-                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+                    latitude = String.valueOf(lat1).replace(',', '.');
+                    longitude = String.valueOf(longi1).replace(',', '.');
+                    //    WeatherInformation1=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+                    Coords[0]=latitude;
+                    Coords[1]=longitude;
+
 
                 } else if (LocationPassive != null) {
+
+
                     double lat = LocationPassive.getLatitude();
                     double longi = LocationPassive.getLongitude();
+
+
                     String lat1 = String.format("%.6f", lat);
                     String longi1 = String.format("%.6f", longi);
-                    latitude = String.valueOf(lat1);
-                    longitude = String.valueOf(longi1);
-                    str=("lat="+latitude+"&lon="+longitude).replace(',', '.');
+                    latitude = String.valueOf(lat1).replace(',', '.');
+                    longitude = String.valueOf(longi1).replace(',', '.');
+                    Coords[0]=latitude;
+                    Coords[1]=longitude;
 
 
 
@@ -310,9 +220,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        return str;
+        return Coords;
 
     }
 
 
+
 }
+
