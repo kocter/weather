@@ -3,10 +3,13 @@ package com.example.weather;
 
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -37,11 +40,19 @@ public class WeatherActivity extends AppCompatActivity {
     LocationManager locationManager;
     String latitude,longitude;
     String[] Coords = new String[2];
+    DatabaseHandler sqlHelper;
+    SQLiteDatabase db;
+    Cursor userCursor;
+    long userId=0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sqlHelper = new DatabaseHandler(this);
+
+        db = sqlHelper.getWritableDatabase();
+        final ContentValues values = new ContentValues();
         setContentView(R.layout.activity_weather);
         WeatherInformation1 = (TextView) findViewById(R.id.WeatherInformation1);
        // WeatherInformation2 = (TextView) findViewById(R.id.WeatherInformation2);
@@ -93,6 +104,8 @@ public class WeatherActivity extends AppCompatActivity {
                     long[] Pressure = new long[40];
 
 
+
+
                     String[] View = new String[40]; // Здесь вся информация о погоде по всем элементам массива
                     String Str = "";
 
@@ -103,8 +116,19 @@ public class WeatherActivity extends AppCompatActivity {
                         Weather[i] = threeHourForecast.getList().get(i).getWeatherArray().get(0).getDescription();
                         WindDirection[i] =threeHourForecast.getList().get(i).getWind().getDeg(); //Направление ветра
                         Pressure[i] = Math.round(threeHourForecast.getList().get(i).getMain().getPressure()/1.33322); //Давление
-                        View[i] = "Город: " + City + "\n" + "Дата и Время: " + Time[i] + "\n" +"На улице: " + Weather[i] + "\n" + "Температура: " + Temperature[i] + "\n" + "Скорость ветра: " + Wind[i] + "\n" +"Направление ветра: " + WindDirection[i]+ "\n"+"Атмосферное давление: " + Pressure[i];
 
+                        values.put(DatabaseHandler.COLUMN_CITY, "Город: " + City);
+                        values.put(DatabaseHandler.COLUMN_TIME, String.valueOf("Время: " + Time[i]));
+                        values.put(DatabaseHandler.COLUMN_TEMPERATURE, String.valueOf("Температура: " + Temperature[i]));
+                        values.put(DatabaseHandler.COLUMN_WIND, String.valueOf("Скорость ветра: " + Wind[i]));
+                        values.put(DatabaseHandler.COLUMN_WINDDIRECTION, String.valueOf("Направление ветра: " + WindDirection[i]));
+                        values.put(DatabaseHandler.COLUMN_WEATHER, String.valueOf("За окном: " + Weather[i]));
+                        values.put(DatabaseHandler.COLUMN_PRESSURE, String.valueOf("Давление: " + Pressure[i]));
+                        long newRowId = db.insert(DatabaseHandler.TABLE_NAME, null, values);
+                        View[i] = "Город: " + City + "\n" + "Дата и Время: " + Time[i] + "\n" +"На улице: " + Weather[i] + "\n" + "Температура: " + Temperature[i] + "\n" + "Скорость ветра: " + Wind[i] + "\n" +"Направление ветра: " + WindDirection[i]+ "\n"+"Атмосферное давление: " + Pressure[i];
+                        db.update(DatabaseHandler.TABLE_NAME,
+                                values,
+                                null, null);
                         Str =Str +  View[i] +"\n"+"\n";
                     }
 

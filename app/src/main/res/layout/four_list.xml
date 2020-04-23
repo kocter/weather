@@ -17,8 +17,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"/>
+
     <TextView
         android:id="@+id/text4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/text6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/text7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"/>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -12,23 +14,19 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="403dp">
-
+        android:layout_height="600dp">
     </ListView>
-
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="add"
-        android:text="Добавить"
-        android:textSize="18dp" />
+        android:id="@+id/Delete"
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="goHome"
-        android:text="Назад" />
-
+        android:layout_width="350dp"
+        android:layout_height="75dp"
+        android:text="Удалить записи"
+        tools:layout_editor_absoluteX="300dp"
+        tools:layout_editor_absoluteY="301dp"
+        android:onClick="Delete"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        />
 
 </LinearLayout>

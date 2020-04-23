@@ -3,11 +3,13 @@ package com.example.weather;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.Button;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     Button Online;
     Button Write;
     Button Exit;
+    Button Weather;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +26,17 @@ public class MainActivity extends AppCompatActivity {
         Online =  findViewById(R.id.Online);
         Write =  findViewById(R.id.Write);
         Exit =  findViewById(R.id.Exit);
+        Weather = findViewById(R.id.Weather);
+        if (!isOnline() )
+        {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
+            Online.setEnabled(false);
+            Weather.setEnabled(false);
+
+
+        }
     }
+
     public void Online(View view) {
        // myTextView.setText("Все ок)");
         Intent Online = new Intent(this, OnlineActivity.class);
@@ -49,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
     public void Exit(View view) {
         System.exit(0);
     }
+    protected boolean isOnline() {
+        String cs = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(cs);
+        if (cm.getActiveNetworkInfo() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
 
 
 }
+

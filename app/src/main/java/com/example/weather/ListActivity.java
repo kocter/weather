@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -18,14 +19,16 @@ public class ListActivity extends AppCompatActivity {
     DatabaseHandler databaseHelper;
     SQLiteDatabase db;
     Cursor userCursor;
+    Button Delete;
     SimpleCursorAdapter userAdapter;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
+        Delete =  findViewById(R.id.Delete);
         header = findViewById(R.id.header);
         userList = findViewById(R.id.list);
 
@@ -38,30 +41,18 @@ public class ListActivity extends AppCompatActivity {
         db = databaseHelper.getReadableDatabase();
 
         //получаем данные из бд в виде курсора
-        userCursor =  db.rawQuery("select * from "+ DatabaseHandler.TABLE, null);
+        userCursor =  db.rawQuery("select * from "+ DatabaseHandler.TABLE_NAME, null);
         // определяем, какие столбцы из курсора будут выводиться в ListView
-        String[] headers = new String[] {DatabaseHandler.COLUMN_YEAR, DatabaseHandler.COLUMN_TEMPERATURE,DatabaseHandler.COLUMN_WIND,DatabaseHandler.COLUMN_PRESSURE};
+        String[] headers = new String[] {DatabaseHandler.COLUMN_CITY,DatabaseHandler.COLUMN_TIME, DatabaseHandler.COLUMN_TEMPERATURE,DatabaseHandler.COLUMN_WIND,DatabaseHandler.COLUMN_WINDDIRECTION,DatabaseHandler.COLUMN_WEATHER,DatabaseHandler.COLUMN_PRESSURE};
         // создаем адаптер, передаем в него курсор
         userAdapter = new SimpleCursorAdapter(this, R.layout.four_list,
-                userCursor, headers, new int[]{R.id.text1, R.id.text2, R.id.text3, R.id.text4}, 0);
+                userCursor, headers, new int[]{R.id.text1, R.id.text2, R.id.text3, R.id.text4, R.id.text5, R.id.text6, R.id.text7}, 0);
         header.setText("Найдено элементов: " + String.valueOf(userCursor.getCount()));
         userList.setAdapter(userAdapter);
 
 
     }
-    public void add(View view){
-        Intent intent = new Intent(this, add_in_list.class);
-        startActivity(intent);
-    }
 
-    public void goHome(){
-        // закрываем подключение
-        db.close();
-        // переход к главной activity
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-    }
 
 
     @Override
@@ -71,5 +62,16 @@ public class ListActivity extends AppCompatActivity {
         db.close();
         userCursor.close();
     }
+
+
+        public void Delete(View view)
+        {
+            db.delete("users", null, null);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+
+        }
+
 
 }
