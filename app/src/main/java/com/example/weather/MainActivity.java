@@ -27,14 +27,14 @@ public class MainActivity extends AppCompatActivity {
         Write =  findViewById(R.id.Write);
         Exit =  findViewById(R.id.Exit);
         Weather = findViewById(R.id.Weather);
-        if (!isOnline() )
-        {
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
-            Online.setEnabled(false);
-            Weather.setEnabled(false);
+       // if (!isOnline() )
+        //{
+        //    Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
+       //     Online.setEnabled(false);
+        //    Weather.setEnabled(false);
 
 
-        }
+       // }
     }
 
     public void Online(View view) {
