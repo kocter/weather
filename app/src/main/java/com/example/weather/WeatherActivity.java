@@ -58,7 +58,6 @@ public class WeatherActivity extends AppCompatActivity {
 
         db = sqlHelper.getWritableDatabase();
         if (!tableExists(db, "users" )) {
-            Toast.makeText(this, "Старые записи удалены ", Toast.LENGTH_LONG).show();
             db.delete("users", null, null);
         }
         final ContentValues values = new ContentValues();
@@ -220,9 +219,9 @@ public class WeatherActivity extends AppCompatActivity {
 
         // закрываем подключение
         db.close();
-        // переход к главной activity
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        this.finish();
+
+
     }
 
 

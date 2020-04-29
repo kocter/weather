@@ -2,6 +2,8 @@ package com.example.weather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.view.View;
@@ -69,6 +71,39 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         }
+
+
+    public void onBackPressed() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        // Указываем Title
+        alertDialog.setTitle("Выход");
+
+        // Указываем текст сообщение
+        alertDialog.setMessage("Вы уверены, что хотите выйти?");
+
+
+
+        // Обработчик на нажатие ДА
+        alertDialog.setPositiveButton("Таки да!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                finish();
+
+            }
+        });
+
+        // Обработчик на нажатие НЕТ
+        alertDialog.setNegativeButton("НЕТ", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+
+        // показываем Alert
+        alertDialog.show();
+    }
+
 
 
 

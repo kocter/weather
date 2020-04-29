@@ -150,6 +150,11 @@ public class OnlineActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void onBackPressed() {
+
+        this.finish();
+    }
+
 
 
     public String[] getLocation() {

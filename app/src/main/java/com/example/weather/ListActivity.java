@@ -69,9 +69,7 @@ public class ListActivity extends AppCompatActivity {
 
         // закрываем подключение
         db.close();
-        // переход к главной activity
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        this.finish();
     }
 
 
