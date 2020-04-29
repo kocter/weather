@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         public void Exit (View view){
-            System.exit(0);
+
+            onBackPressed();
+
         }
         protected boolean isOnline()
     {
