@@ -118,13 +118,15 @@ public class WeatherActivity extends AppCompatActivity {
                     String Str = "";
 
                     for(int i=0;i<40;i++){
+
                         Time[i]=threeHourForecast.getList().get(i).getDtTxt();
                         Temperature[i] = threeHourForecast.getList().get(i).getMain().getTemp();
                         Wind[i] = threeHourForecast.getList().get(i).getWind().getSpeed();
                         Weather[i] = threeHourForecast.getList().get(i).getWeatherArray().get(0).getDescription();
                         WindDirection[i] =threeHourForecast.getList().get(i).getWind().getDeg(); //Направление ветра
                         Pressure[i] = Math.round(threeHourForecast.getList().get(i).getMain().getPressure()/1.33322); //Давление
-
+                        if(Time[i]!=null&&Temperature[i]!=null&&City!=null&&Weather[i]!=null&&Wind[i]!=null&&WindDirection[i]!=null)
+                        {
                         values.put(DatabaseHandler.COLUMN_CITY, "Город: " + City);
                         values.put(DatabaseHandler.COLUMN_TIME, String.valueOf("Время: " + Time[i]));
                         values.put(DatabaseHandler.COLUMN_TEMPERATURE, String.valueOf("Температура: " + Temperature[i]));
@@ -133,12 +135,14 @@ public class WeatherActivity extends AppCompatActivity {
                         values.put(DatabaseHandler.COLUMN_WEATHER, String.valueOf("За окном: " + Weather[i]));
                         values.put(DatabaseHandler.COLUMN_PRESSURE, String.valueOf("Давление: " + Pressure[i]));
                         long newRowId = db.insert(DatabaseHandler.TABLE_NAME, null, values);
+                        }
                         View[i] = "Город: " + City + "\n" + "Дата и Время: " + Time[i] + "\n" +"На улице: " + Weather[i] + "\n" + "Температура: " + Temperature[i] + "\n" + "Скорость ветра: " + Wind[i] + "\n" +"Направление ветра: " + WindDirection[i]+ "\n"+"Атмосферное давление: " + Pressure[i];
 
 
 
                         Str =Str +  View[i] +"\n"+"\n";
                     }
+                    db.close();
 
 
 //                    String Time1 = threeHourForecast.getList().get(0).getDtTxt(); // Дата и Время
@@ -215,8 +219,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     public void onBackPressed() {
 
-        // закрываем подключение
-        db.close();
+
         this.finish();
 
 
