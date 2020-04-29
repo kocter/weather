@@ -49,9 +49,16 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         sqlHelper = new DatabaseHandler(this);
 
         db = sqlHelper.getWritableDatabase();
+        if (!tableExists(db, "users" )) {
+            Toast.makeText(this, "Старые записи удалены ", Toast.LENGTH_LONG).show();
+            db.delete("users", null, null);
+        }
         final ContentValues values = new ContentValues();
         setContentView(R.layout.activity_weather);
         WeatherInformation1 = (TextView) findViewById(R.id.WeatherInformation1);
@@ -129,6 +136,8 @@ public class WeatherActivity extends AppCompatActivity {
                         db.update(DatabaseHandler.TABLE_NAME,
                                 values,
                                 null, null);
+
+
                         Str =Str +  View[i] +"\n"+"\n";
                     }
 
@@ -191,6 +200,23 @@ public class WeatherActivity extends AppCompatActivity {
         final AlertDialog alertDialog=builder.create();
         alertDialog.show();
     }
+
+         boolean tableExists(SQLiteDatabase db, String tableName) {
+             if ( db == null )
+             {
+            return false;
+             }
+             else
+             {
+                 return false;
+             }
+         }
+
+
+
+
+
+
 
 
 

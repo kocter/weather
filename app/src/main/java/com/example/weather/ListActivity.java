@@ -19,7 +19,7 @@ public class ListActivity extends AppCompatActivity {
     DatabaseHandler databaseHelper;
     SQLiteDatabase db;
     Cursor userCursor;
-    Button Delete;
+    Button Home;
     SimpleCursorAdapter userAdapter;
 
 
@@ -28,7 +28,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Delete =  findViewById(R.id.Delete);
+        Home =  findViewById(R.id.Home);
         header = findViewById(R.id.header);
         userList = findViewById(R.id.list);
 
@@ -51,6 +51,7 @@ public class ListActivity extends AppCompatActivity {
         userList.setAdapter(userAdapter);
 
 
+
     }
 
 
@@ -64,14 +65,15 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-        public void Delete(View view)
-        {
-            db.delete("users", null, null);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+    public void Home(View view)
+    {
+        // закрываем подключение
 
-        }
+        // переход к главной activity
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        db.close();
+    }
 
 
 }
