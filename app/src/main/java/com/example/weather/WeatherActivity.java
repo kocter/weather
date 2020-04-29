@@ -15,6 +15,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.provider.Settings;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +38,7 @@ public class WeatherActivity extends AppCompatActivity {
 
 
 
-
+    Button Home;
     LocationManager locationManager;
     String latitude,longitude;
     String[] Coords = new String[2];
@@ -211,6 +213,17 @@ public class WeatherActivity extends AppCompatActivity {
                  return false;
              }
          }
+
+
+
+    public void onBackPressed() {
+
+        // закрываем подключение
+        db.close();
+        // переход к главной activity
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
 
 

@@ -19,7 +19,7 @@ public class ListActivity extends AppCompatActivity {
     DatabaseHandler databaseHelper;
     SQLiteDatabase db;
     Cursor userCursor;
-    Button Home;
+
     SimpleCursorAdapter userAdapter;
 
 
@@ -28,7 +28,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Home =  findViewById(R.id.Home);
+
         header = findViewById(R.id.header);
         userList = findViewById(R.id.list);
 
@@ -65,14 +65,13 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    public void Home(View view)
-    {
-        // закрываем подключение
+    public void onBackPressed() {
 
+        // закрываем подключение
+        db.close();
         // переход к главной activity
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        db.close();
     }
 
 

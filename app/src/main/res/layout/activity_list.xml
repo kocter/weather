@@ -7,25 +7,15 @@
     tools:context=".MainActivity">
     <TextView
         android:id="@+id/header"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"/>
 
     <ListView
         android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="600dp">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
     </ListView>
-    <Button
-        android:id="@+id/Home"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:text="Назад"
-        tools:layout_editor_absoluteX="300dp"
-        tools:layout_editor_absoluteY="301dp"
-        android:onClick="Home"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        />
+
 
 </LinearLayout>
