@@ -231,6 +231,8 @@ public class OnlineActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(this, "Can't Get Your Location", Toast.LENGTH_SHORT).show();
+                    Coords[0]="0";
+                    Coords[1]="0";
                 }
 
                 //Thats All Run Your App
