@@ -134,9 +134,7 @@ public class WeatherActivity extends AppCompatActivity {
                         values.put(DatabaseHandler.COLUMN_PRESSURE, String.valueOf("Давление: " + Pressure[i]));
                         long newRowId = db.insert(DatabaseHandler.TABLE_NAME, null, values);
                         View[i] = "Город: " + City + "\n" + "Дата и Время: " + Time[i] + "\n" +"На улице: " + Weather[i] + "\n" + "Температура: " + Temperature[i] + "\n" + "Скорость ветра: " + Wind[i] + "\n" +"Направление ветра: " + WindDirection[i]+ "\n"+"Атмосферное давление: " + Pressure[i];
-                        db.update(DatabaseHandler.TABLE_NAME,
-                                values,
-                                null, null);
+
 
 
                         Str =Str +  View[i] +"\n"+"\n";
